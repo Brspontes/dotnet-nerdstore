@@ -28,7 +28,7 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
             var erros = modelState.Values.SelectMany(e => e.Errors);
             foreach (var erro in erros)
             {
-                AdicionarErroProcessamento(erro);
+                AdicionarErroProcessamento(erro.ErrorMessage);
             }
 
             return CustomResponse();
