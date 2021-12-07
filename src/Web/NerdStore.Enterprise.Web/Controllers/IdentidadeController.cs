@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Web.Controllers
 {
-    public class IdentidadeController : Controller
+    public class IdentidadeController : MainController
     {
         private readonly IAutenticacaoService autenticacaoService;
 
@@ -35,7 +35,7 @@ namespace NerdStore.Enterprise.Web.Controllers
             // API Login
             var resposta = await autenticacaoService.Registro(usuarioRegistro);
 
-            if (false) return View(usuarioRegistro);
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
 
             // Realizar Login
             await RealizarLogin(resposta);
@@ -58,7 +58,7 @@ namespace NerdStore.Enterprise.Web.Controllers
             // API Login
             var resposta = await autenticacaoService.Login(usuarioLogin);
 
-            if (false) return View(usuarioLogin);
+            if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
 
             // Realizar Login
             await RealizarLogin(resposta);
