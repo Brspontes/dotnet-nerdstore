@@ -1,11 +1,25 @@
 ﻿using NerdStore.Enterprise.Web.Extensions;
 using System;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Web.Services
 {
     public abstract class Service
     {
+        protected StringContent ObterConteudo(object dado) =>
+            new StringContent(JsonSerializer.Serialize(dado),
+                Encoding.UTF8,
+                "application/json");
+
+        protected async Task<T> DeserializarObjetoResponse<T>(HttpResponseMessage response) =>
+            JsonSerializer.Deserialize<T>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+
         protected bool TratarErrosResponse(HttpResponseMessage response)
         {
             switch ((int)response.StatusCode)
