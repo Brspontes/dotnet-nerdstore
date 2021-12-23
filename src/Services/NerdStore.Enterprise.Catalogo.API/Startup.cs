@@ -10,6 +10,7 @@ using NerdStore.Enterprise.Catalogo.API.Configuration;
 using NerdStore.Enterprise.Catalogo.API.Data;
 using NerdStore.Enterprise.Catalogo.API.Data.Repositories;
 using NerdStore.Enterprise.Catalogo.API.Models;
+using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace NerdStore.Enterprise.Catalogo.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApiConfiguration(Configuration);
+            services.AddJwtConfiguration(Configuration);
             services.AddSwaggerConfiguration();
             services.RegisterServices();
         }

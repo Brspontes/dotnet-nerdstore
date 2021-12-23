@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Catalogo.API.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using NerdStore.Enterprise.WebAPI.Core.Identidade;
 
 namespace NerdStore.Enterprise.Catalogo.API.Configuration
 {
@@ -41,7 +42,7 @@ namespace NerdStore.Enterprise.Catalogo.API.Configuration
 
             app.UseCors("Total");
 
-            //app.UseAuthConfiguration();
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

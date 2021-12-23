@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NerdStore.Enterprise.WebAPI.Core.Identidade;
 
 namespace NerdStore.Enterprise.Identidade.Api.Configuration
 {
@@ -24,7 +25,7 @@ namespace NerdStore.Enterprise.Identidade.Api.Configuration
 
             app.UseRouting();
 
-            app.UseIdentityConfiguration();
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {
