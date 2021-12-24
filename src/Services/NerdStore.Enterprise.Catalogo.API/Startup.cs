@@ -28,10 +28,10 @@ namespace NerdStore.Enterprise.Catalogo.API
                   .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
                   .AddEnvironmentVariables();
 
-            if (environment.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
+            //if (environment.IsDevelopment())
+            //{
+            //    builder.AddUserSecrets<Startup>();
+            //}
 
             Configuration = builder.Build();
         }

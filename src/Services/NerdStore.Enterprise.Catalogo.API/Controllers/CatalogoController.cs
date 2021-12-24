@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NerdStore.Enterprise.Catalogo.API.Models;
+using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Catalogo.API.Controllers
 {
+    [ApiController]
+    [Authorize]
     public class CatalogoController : Controller
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -15,14 +19,14 @@ namespace NerdStore.Enterprise.Catalogo.API.Controllers
             _produtoRepository = produtoRepository;
         }
 
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet("catalogo/produtos")]
         public async Task<IEnumerable<Produto>> Index()
         {
             return await _produtoRepository.ObterTodos();
         }
 
-        //[ClaimsAuthorize("Catalogo", "Ler")]
+        [ClaimsAuthorize("Catalogo", "Ler")]
         [HttpGet("catalogo/produtos/{id}")]
         public async Task<Produto> ProdutoDetalhe(Guid id)
         {

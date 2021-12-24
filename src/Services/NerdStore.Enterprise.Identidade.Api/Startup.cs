@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NerdStore.Enterprise.Identidade.Api.Configuration;
+using NerdStore.Enterprise.WebAPI.Core.Identidade;
 
 namespace NerdStore.Enterprise.Identidade.Api
 {
@@ -17,10 +18,10 @@ namespace NerdStore.Enterprise.Identidade.Api
                   .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
                   .AddEnvironmentVariables();
 
-            if (environment.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
+            //if (environment.IsDevelopment())
+            //{
+            //    builder.AddUserSecrets<Startup>();
+            //}
 
             Configuration = builder.Build();
         }

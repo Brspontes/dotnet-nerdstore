@@ -23,7 +23,6 @@ namespace NerdStore.Enterprise.Identidade.Api.Configuration
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-
             services.AddJwtConfiguration(configuration);
 
             return services;
