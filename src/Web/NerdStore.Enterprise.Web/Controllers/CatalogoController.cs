@@ -8,12 +8,12 @@ namespace NerdStore.Enterprise.Web.Controllers
     public class CatalogoController : Controller
     {
         private readonly ICatalogoService catalogoService;
-        private readonly ICatalogoServiceRefit catalogoServiceRefit;
+        //private readonly ICatalogoServiceRefit catalogoServiceRefit;
 
         public CatalogoController(ICatalogoService catalogoService, ICatalogoServiceRefit catalogoServiceRefit)
         {
             this.catalogoService = catalogoService;
-            this.catalogoServiceRefit = catalogoServiceRefit;
+            //this.catalogoServiceRefit = catalogoServiceRefit;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace NerdStore.Enterprise.Web.Controllers
         [Route("vitrine")]
         public async Task<IActionResult> Index()
         {
-            var produtos = await catalogoServiceRefit.ObterTodos();
+            var produtos = await catalogoService.ObterTodos();
             return View(produtos);
         }
 
@@ -29,7 +29,7 @@ namespace NerdStore.Enterprise.Web.Controllers
         [Route("produto-detalhe/{id}")]
         public async Task<IActionResult> ProdutoDetalhe(Guid id)
         {
-            var produto = await catalogoServiceRefit.ObterPorId(id);
+            var produto = await catalogoService.ObterPorId(id);
             return View(produto);
         }
     }

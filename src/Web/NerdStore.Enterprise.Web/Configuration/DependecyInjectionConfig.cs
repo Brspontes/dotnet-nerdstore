@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Web.Extensions;
 using NerdStore.Enterprise.Web.Services;
 using NerdStore.Enterprise.Web.Services.Handlers;
+using Polly;
+using Polly.Extensions.Http;
 using System;
 
 namespace NerdStore.Enterprise.Web.Configuration
@@ -15,14 +17,30 @@ namespace NerdStore.Enterprise.Web.Configuration
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
             services.AddHttpClient<IAutenticacaoService, AutenticacaoService>();
 
-            //services.AddHttpClient<ICatalogoService, CatalogoService>()
-            //    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            var retryWaitPolicy = HttpPolicyExtensions.HandleTransientHttpError()
+                .WaitAndRetryAsync(new[]
+                {
+                    TimeSpan.FromSeconds(1),
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromSeconds(10)
+                }, (outcome, timespan, retryCount, context) =>
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine($"Tentando pela {retryCount} vez!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                });
 
-            services.AddHttpClient("Refit", options =>
-            {
-                options.BaseAddress = new Uri(configuration.GetSection("CatalogoUrl").Value);
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            .AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
+            services.AddHttpClient<ICatalogoService, CatalogoService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                //.AddTransientHttpErrorPolicy(
+                //    p => p.WaitAndRetryAsync(retryCount: 3, sleepDurationProvider: _ => TimeSpan.FromMilliseconds(600)));
+                .AddPolicyHandler(retryWaitPolicy);
+
+            //services.AddHttpClient("Refit", options =>
+            //{
+            //    options.BaseAddress = new Uri(configuration.GetSection("CatalogoUrl").Value);
+            //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            //.AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();
