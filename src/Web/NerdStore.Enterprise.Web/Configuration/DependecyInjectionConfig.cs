@@ -34,7 +34,8 @@ namespace NerdStore.Enterprise.Web.Configuration
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 //.AddTransientHttpErrorPolicy(
                 //    p => p.WaitAndRetryAsync(retryCount: 3, sleepDurationProvider: _ => TimeSpan.FromMilliseconds(600)));
-                .AddPolicyHandler(retryWaitPolicy);
+                .AddPolicyHandler(retryWaitPolicy)
+                .AddTransientHttpErrorPolicy( p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             //services.AddHttpClient("Refit", options =>
             //{

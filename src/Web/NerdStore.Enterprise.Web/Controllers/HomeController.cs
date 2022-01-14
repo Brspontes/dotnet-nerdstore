@@ -28,6 +28,18 @@ namespace NerdStore.Enterprise.Web.Controllers
             return View();
         }
 
+        [Route("sistema-indisponivel")]
+        public IActionResult SistemaIndisponivel()
+        {
+            var modelError = new ErrorViewModel
+            {
+                Mensagem = "O sistema está temporariamente indisponível, isto pode ocorrer em momentos de sobrecarga do usuário",
+                Titulo = "Sistema indisponivel",
+                ErroCode = 500
+            };
+
+            return View("Error", modelError);
+        }
 
         [Route("erro/{id:length(3,3)}")]
         public IActionResult Error(int id)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Polly.CircuitBreaker;
 using Refit;
 using System.Net;
 using System.Threading.Tasks;
@@ -32,6 +33,10 @@ namespace NerdStore.Enterprise.Web.Extensions
             {
                 HandleRequestExceptionAsync(context, ex.StatusCode);
             }
+            catch (BrokenCircuitException)
+            {
+                HandleCircuitBreakerExceptionAsync(context);
+            }
         }
 
         private static void HandleRequestExceptionAsync(HttpContext context, HttpStatusCode httpStatusCode)
@@ -43,6 +48,11 @@ namespace NerdStore.Enterprise.Web.Extensions
             }
 
             context.Response.StatusCode = (int)httpStatusCode;
+        }
+
+        private static void HandleCircuitBreakerExceptionAsync(HttpContext context)
+        {
+            context.Response.Redirect("/sistema-indisponivel");
         }
     }
 }
