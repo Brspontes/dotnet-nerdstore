@@ -32,7 +32,7 @@ namespace NerdStore.Enterprise.Web
         {
             services.AddIdentityConfig();
             services.AddMvcConfiguration(Configuration);
-            services.RegisterServices();
+            services.RegisterServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Refit;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -21,19 +22,27 @@ namespace NerdStore.Enterprise.Web.Extensions
             }
             catch (CustomHttpRequestException ex)
             {
-                HandleRequestExceptionAsync(context, ex);
+                HandleRequestExceptionAsync(context, ex.StatusCode);
+            }
+            catch (ValidationApiException ex)
+            {
+                HandleRequestExceptionAsync(context, ex.StatusCode);
+            }
+            catch (ApiException ex)
+            {
+                HandleRequestExceptionAsync(context, ex.StatusCode);
             }
         }
 
-        private static void HandleRequestExceptionAsync(HttpContext context, CustomHttpRequestException httpRequestException)
+        private static void HandleRequestExceptionAsync(HttpContext context, HttpStatusCode httpStatusCode)
         {
-            if (httpRequestException.StatusCode == HttpStatusCode.Unauthorized)
+            if (httpStatusCode == HttpStatusCode.Unauthorized)
             {
                 context.Response.Redirect($"/login?ReturnUrl={context.Request.Path}");
                 return;
             }
 
-            context.Response.StatusCode = (int)httpRequestException.StatusCode;
+            context.Response.StatusCode = (int)httpStatusCode;
         }
     }
 }
