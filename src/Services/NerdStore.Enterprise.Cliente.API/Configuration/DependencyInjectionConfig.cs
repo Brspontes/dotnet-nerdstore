@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Cliente.API.Application.Commands;
+using NerdStore.Enterprise.Cliente.API.Application.Events;
 using NerdStore.Enterprise.Cliente.API.Data;
 using NerdStore.Enterprise.Cliente.API.Data.Repositories;
 using NerdStore.Enterprise.Cliente.API.Models;
@@ -16,7 +17,7 @@ namespace NerdStore.Enterprise.Cliente.API.Configuration
             services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IRequestHandler<RegistrarClienteCommand, ValidationResult>, ClienteCommandHandler>();
 
-            //services.AddScoped<INotificationHandler<ClienteRegistradoEvent>, ClienteEventHandler>();
+            services.AddScoped<INotificationHandler<ClienteRegistradoEvent>, ClienteEventHandler>();
 
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<ClientesContext>();

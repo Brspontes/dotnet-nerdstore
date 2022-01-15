@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using NerdStore.Enterprise.Cliente.API.Application.Events;
 using NerdStore.Enterprise.Cliente.API.Models;
 using NerdStore.Enterprise.Core.Messages;
 using System.Threading;
@@ -31,6 +32,7 @@ namespace NerdStore.Enterprise.Cliente.API.Application.Commands
             }
 
             clienteRepository.Adicionar(cliente);
+            cliente.AdicionarEvento(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
 
             return await PersistirDados(clienteRepository.UnitOfWork);
         }
