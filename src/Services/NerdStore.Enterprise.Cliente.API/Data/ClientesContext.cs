@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using NerdStore.Enterprise.Cliente.API.Models;
 using NerdStore.Enterprise.Core.Data;
 using NerdStore.Enterprise.Core.DomainObjects;
 using NerdStore.Enterprise.Core.Mediatr;
+using NerdStore.Enterprise.Core.Messages;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,8 +26,8 @@ namespace NerdStore.Enterprise.Cliente.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Ignore<ValidationResult>();
-            //modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
+            modelBuilder.Ignore<Event>();
 
             foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(
                 e => e.GetProperties().Where(p => p.ClrType == typeof(string))))

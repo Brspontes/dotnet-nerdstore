@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NerdStore.Enterprise.Catalogo.API.Models;
+using NerdStore.Enterprise.WebAPI.Core.Controllers;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace NerdStore.Enterprise.Catalogo.API.Controllers
 {
     [ApiController]
     [Authorize]
-    public class CatalogoController : Controller
+    public class CatalogoController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;
 

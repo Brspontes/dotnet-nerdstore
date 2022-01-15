@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using NerdStore.Enterprise.Identidade.Api.Extensions;
 using NerdStore.Enterprise.Identidade.Api.Models;
+using NerdStore.Enterprise.WebAPI.Core.Controllers;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using System;
 using System.Collections.Generic;
