@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NerdStore.Enterprise.Identidade.Api.Configuration;
+using NerdStore.Enterprise.Identidade.API.Configuration;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 
 namespace NerdStore.Enterprise.Identidade.Api
@@ -33,6 +34,7 @@ namespace NerdStore.Enterprise.Identidade.Api
             services.AddIdentityConfiguration(Configuration);
             services.AddApiConfiguration();
             services.AddSwaggerConfiguration();
+            services.AddMessageBusConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

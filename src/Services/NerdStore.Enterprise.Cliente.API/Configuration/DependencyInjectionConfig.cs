@@ -6,6 +6,7 @@ using NerdStore.Enterprise.Cliente.API.Application.Events;
 using NerdStore.Enterprise.Cliente.API.Data;
 using NerdStore.Enterprise.Cliente.API.Data.Repositories;
 using NerdStore.Enterprise.Cliente.API.Models;
+using NerdStore.Enterprise.Cliente.API.Services;
 using NerdStore.Enterprise.Core.Mediatr;
 
 namespace NerdStore.Enterprise.Cliente.API.Configuration

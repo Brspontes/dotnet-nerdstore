@@ -45,7 +45,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NerdStore.Enterprise.Pedido
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C4A22BE9-FD75-4545-A50C-5D525BD56352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdStore.Enterprise.WebAPI.Core", "src\BuildingBlocks\NerdStore.Enterprise.WebAPI.Core\NerdStore.Enterprise.WebAPI.Core.csproj", "{00B4153C-3FB0-4CB6-B301-A2782B75B640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NerdStore.Enterprise.WebAPI.Core", "src\BuildingBlocks\NerdStore.Enterprise.WebAPI.Core\NerdStore.Enterprise.WebAPI.Core.csproj", "{00B4153C-3FB0-4CB6-B301-A2782B75B640}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessageBus", "MessageBus", "{D05F94C8-F8C9-4DD9-A205-D0C8A613BCE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdStore.Enterprise.MessageBus", "src\BuildingBlocks\NerdStore.Enterprise.MessageBus\NerdStore.Enterprise.MessageBus.csproj", "{D4FE6E97-90E2-4433-B4C7-26356C894C07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +93,10 @@ Global
 		{00B4153C-3FB0-4CB6-B301-A2782B75B640}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00B4153C-3FB0-4CB6-B301-A2782B75B640}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00B4153C-3FB0-4CB6-B301-A2782B75B640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4FE6E97-90E2-4433-B4C7-26356C894C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4FE6E97-90E2-4433-B4C7-26356C894C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4FE6E97-90E2-4433-B4C7-26356C894C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4FE6E97-90E2-4433-B4C7-26356C894C07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +123,8 @@ Global
 		{E8FACA21-CD11-450D-B4F4-5EACEF7ED12A} = {66B88121-28AC-48F8-B9D2-F9C4A0A51507}
 		{C4A22BE9-FD75-4545-A50C-5D525BD56352} = {AE9AC76F-2369-4B63-87E0-DA72EA881DD5}
 		{00B4153C-3FB0-4CB6-B301-A2782B75B640} = {C4A22BE9-FD75-4545-A50C-5D525BD56352}
+		{D05F94C8-F8C9-4DD9-A205-D0C8A613BCE7} = {AE9AC76F-2369-4B63-87E0-DA72EA881DD5}
+		{D4FE6E97-90E2-4433-B4C7-26356C894C07} = {D05F94C8-F8C9-4DD9-A205-D0C8A613BCE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFFAC162-20C6-472C-B264-2E2095B4E572}

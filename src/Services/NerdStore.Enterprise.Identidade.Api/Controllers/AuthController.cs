@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using NerdStore.Enterprise.Core.Messages.Integration;
 using NerdStore.Enterprise.Identidade.Api.Extensions;
 using NerdStore.Enterprise.Identidade.Api.Models;
+using NerdStore.Enterprise.MessageBus;
 using NerdStore.Enterprise.WebAPI.Core.Controllers;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using System;
@@ -24,9 +25,9 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IOptions<AppSettings> appSettings;
-        private IBus bus;
+        private readonly IMessageBus bus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings, IBus bus)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings, IMessageBus bus)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -50,7 +51,14 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
 
             if (result.Succeeded)
             {
-                var sucesso = await RegistrarCliente(usuarioRegistro);
+                var clienteResult = await RegistrarCliente(usuarioRegistro);
+
+                if (!clienteResult.ValidationResult.IsValid)
+                {
+                    await userManager.DeleteAsync(user);
+                    return CustomResponse(clienteResult.ValidationResult);
+                }
+
                 return CustomResponse(await GerarJwt(usuarioRegistro.Email));
             }
 
@@ -60,18 +68,6 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
             }
 
             return CustomResponse();
-        }
-
-        private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistro usuarioRegistro)
-        {
-            var usuario = await userManager.FindByEmailAsync(usuarioRegistro.Email);
-            var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(
-                Guid.Parse(usuario.Id), usuarioRegistro.Nome, usuarioRegistro.Email, usuarioRegistro.Cpf);
-
-            //Porta padrão RabbitMq
-            bus = RabbitHutch.CreateBus("host=localhost:5672");
-            var sucesso = await bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
-            return sucesso;
         }
 
         [HttpPost("auntenticar")]
@@ -157,5 +153,22 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistro usuarioRegistro)
+        {
+            var usuario = await userManager.FindByEmailAsync(usuarioRegistro.Email);
+            var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(
+                Guid.Parse(usuario.Id), usuarioRegistro.Nome, usuarioRegistro.Email, usuarioRegistro.Cpf);
+
+            try
+            {
+                return await bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
+            }
+            catch (Exception)
+            {
+                await userManager.DeleteAsync(usuario);
+                throw;
+            }
+        }
     }
 }

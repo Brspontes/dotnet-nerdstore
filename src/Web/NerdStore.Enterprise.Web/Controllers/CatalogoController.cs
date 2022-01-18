@@ -10,7 +10,7 @@ namespace NerdStore.Enterprise.Web.Controllers
         private readonly ICatalogoService catalogoService;
         //private readonly ICatalogoServiceRefit catalogoServiceRefit;
 
-        public CatalogoController(ICatalogoService catalogoService, ICatalogoServiceRefit catalogoServiceRefit)
+        public CatalogoController(ICatalogoService catalogoService)
         {
             this.catalogoService = catalogoService;
             //this.catalogoServiceRefit = catalogoServiceRefit;
