@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Web.Extensions;
 using NerdStore.Enterprise.Web.Services;
 using NerdStore.Enterprise.Web.Services.Handlers;
+using NerdStore.Enterprise.WebAPI.Core.Usuario;
 using Polly;
 using Polly.Extensions.Http;
 using System;
@@ -46,7 +47,7 @@ namespace NerdStore.Enterprise.Web.Configuration
             //.AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IUser, AspNetUser>();
+            services.AddScoped<IAspNetUser, AspNetUser>();
         }
     }
 }

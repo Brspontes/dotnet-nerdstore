@@ -1,4 +1,5 @@
 ﻿using NerdStore.Enterprise.Web.Extensions;
+using NerdStore.Enterprise.WebAPI.Core.Usuario;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,9 +11,9 @@ namespace NerdStore.Enterprise.Web.Services.Handlers
     //Interceptador de request para adcionar token
     public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
     {
-        private readonly IUser user;
+        private readonly IAspNetUser user;
 
-        public HttpClientAuthorizationDelegatingHandler(IUser user)
+        public HttpClientAuthorizationDelegatingHandler(IAspNetUser user)
         {
             this.user = user;
         }

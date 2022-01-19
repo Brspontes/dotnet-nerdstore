@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using NerdStore.Enterprise.Web.Extensions
-@inject IUser AppUser
+@using NerdStore.Enterprise.WebAPI.Core.Usuario
+@inject IAspNetUser AppUser
 
 @if (AppUser.EstaAutenticado())
 {
