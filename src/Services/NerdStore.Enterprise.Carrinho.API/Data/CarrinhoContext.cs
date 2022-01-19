@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using NerdStore.Enterprise.Carrinho.API.Model;
 using System.Linq;
 
@@ -22,7 +23,7 @@ namespace NerdStore.Enterprise.Carrinho.API.Data
                 e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
                 property.SetColumnType("varchar(100)");
 
-            //modelBuilder.Ignore<ValidationResult>();
+            modelBuilder.Ignore<ValidationResult>();
 
             modelBuilder.Entity<CarrinhoCliente>()
                 .HasIndex(c => c.ClienteId)
