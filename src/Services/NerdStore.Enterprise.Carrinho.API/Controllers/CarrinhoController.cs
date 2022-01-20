@@ -44,7 +44,6 @@ namespace NerdStore.Enterprise.Carrinho.API.Controllers
                 ManipularCarrinhoExistente(carrinho, item);
             }
 
-            ValidarCarrinho(carrinho);
             if (!OperacaoValida()) return CustomResponse();
 
             await PersistirDados();
@@ -82,7 +81,8 @@ namespace NerdStore.Enterprise.Carrinho.API.Controllers
         private void ManipularNovoCarrinho(CarrinhoItem item)
         {
             var carrinho = new CarrinhoCliente(user.ObterUserId());
-
+            carrinho.AdicionarItem(item);
+            ValidarCarrinho(carrinho);
             context.CarrinhoCliente.Add(carrinho);
         }
 

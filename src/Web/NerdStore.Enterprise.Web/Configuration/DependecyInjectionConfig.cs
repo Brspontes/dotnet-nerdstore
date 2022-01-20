@@ -48,6 +48,12 @@ namespace NerdStore.Enterprise.Web.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAspNetUser, AspNetUser>();
+
+            services.AddHttpClient<ICarrinhoService, CarrinhoService>()
+              .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(retryWaitPolicy)
+              .AddTransientHttpErrorPolicy(
+                  p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
         }
     }
 }

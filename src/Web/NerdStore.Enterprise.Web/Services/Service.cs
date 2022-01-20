@@ -1,4 +1,5 @@
 ﻿using NerdStore.Enterprise.Web.Extensions;
+using NerdStore.Enterprise.Web.Models;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -36,6 +37,11 @@ namespace NerdStore.Enterprise.Web.Services
 
             response.EnsureSuccessStatusCode();
             return true;
+        }
+
+        protected ResponseResult RetornoOk()
+        {
+            return new ResponseResult();
         }
     }
 }
