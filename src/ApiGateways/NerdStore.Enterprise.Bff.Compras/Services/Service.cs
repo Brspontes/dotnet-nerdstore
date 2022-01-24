@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NerdStore.Enterprise.Core.Communication;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -35,6 +36,11 @@ namespace NerdStore.Enterprise.Bff.Compras.Services
 
             response.EnsureSuccessStatusCode();
             return true;
+        }
+
+        protected ResponseResult RetornoOk()
+        {
+            return new ResponseResult();
         }
     }
 }

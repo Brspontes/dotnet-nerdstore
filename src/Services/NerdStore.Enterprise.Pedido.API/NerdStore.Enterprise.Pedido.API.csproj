@@ -8,7 +8,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+    <PackageReference Include="dapper" Version="2.0.35" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\Commands\" />
+    <Folder Include="Application\Events\" />
+    <Folder Include="Application\Queries\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.Core\NerdStore.Enterprise.Core.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.MessageBus\NerdStore.Enterprise.MessageBus.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.WebAPI.Core\NerdStore.Enterprise.WebAPI.Core.csproj" />
   </ItemGroup>
 
 

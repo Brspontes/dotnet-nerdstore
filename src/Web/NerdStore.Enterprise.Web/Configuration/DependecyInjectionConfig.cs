@@ -49,7 +49,7 @@ namespace NerdStore.Enterprise.Web.Configuration
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAspNetUser, AspNetUser>();
 
-            services.AddHttpClient<ICarrinhoService, CarrinhoService>()
+            services.AddHttpClient<IComprasBffService, ComprasBffService>()
               .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(retryWaitPolicy)
               .AddTransientHttpErrorPolicy(
