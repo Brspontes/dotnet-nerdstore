@@ -1,4 +1,5 @@
-﻿using NerdStore.Enterprise.Web.Extensions;
+﻿using NerdStore.Enterprise.Core.Communication;
+using NerdStore.Enterprise.Web.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;

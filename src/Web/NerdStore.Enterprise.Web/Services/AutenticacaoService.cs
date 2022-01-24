@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using NerdStore.Enterprise.Core.Communication;
 using NerdStore.Enterprise.Web.Extensions;
 using NerdStore.Enterprise.Web.Models;
 using System;

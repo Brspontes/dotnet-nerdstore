@@ -1,4 +1,5 @@
-﻿using NerdStore.Enterprise.Web.Models;
+﻿using NerdStore.Enterprise.Core.Communication;
+using NerdStore.Enterprise.Web.Models;
 using System;
 using System.Threading.Tasks;
 
