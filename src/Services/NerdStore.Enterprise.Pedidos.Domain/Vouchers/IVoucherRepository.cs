@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Pedidos.Domain.Vouchers
 {
-    public interface IVoucherRepository
+    public interface IVoucherRepository : IRepository<Voucher>
     {
-        public interface IVoucherRepository : IRepository<Voucher>
-        {
-            Task<Voucher> ObterVoucherPorCodigo(string codigo);
-            void Atualizar(Voucher voucher);
-        }
+        Task<Voucher> ObterVoucherPorCodigo(string codigo);
+        void Atualizar(Voucher voucher);
     }
+
 }

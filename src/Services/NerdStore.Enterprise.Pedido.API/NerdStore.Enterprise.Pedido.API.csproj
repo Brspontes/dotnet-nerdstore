@@ -30,6 +30,7 @@
     <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.Core\NerdStore.Enterprise.Core.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.MessageBus\NerdStore.Enterprise.MessageBus.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\NerdStore.Enterprise.WebAPI.Core\NerdStore.Enterprise.WebAPI.Core.csproj" />
+    <ProjectReference Include="..\NerdStore.Enterprise.Pedidos.Infra\NerdStore.Enterprise.Pedidos.Infra.csproj" />
   </ItemGroup>
 
 

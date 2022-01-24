@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NerdStore.Enterprise.Core.Mediatr;
+using NerdStore.Enterprise.Pedidos.Infra.Data;
 using NerdStore.Enterprise.WebAPI.Core.Usuario;
 using System;
 using System.Collections.Generic;
@@ -23,14 +25,14 @@ namespace NerdStore.Enterprise.Pedido.API.Configuration
             //services.AddScoped<INotificationHandler<PedidoRealizadoEvent>, PedidoEventHandler>();
 
             //// Application
-            //services.AddScoped<IMediatorHandler, MediatorHandler>();
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
             //services.AddScoped<IVoucherQueries, VoucherQueries>();
             //services.AddScoped<IPedidoQueries, PedidoQueries>();
 
             //// Data
             //services.AddScoped<IPedidoRepository, PedidoRepository>();
             //services.AddScoped<IVoucherRepository, VoucherRepository>();
-            //services.AddScoped<PedidosContext>();
+            services.AddScoped<PedidosContext>();
         }
     }
 }
