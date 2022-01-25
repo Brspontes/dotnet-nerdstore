@@ -4,6 +4,7 @@ using NerdStore.Enterprise.Core.Data;
 using NerdStore.Enterprise.Core.DomainObjects;
 using NerdStore.Enterprise.Core.Mediatr;
 using NerdStore.Enterprise.Core.Messages;
+using NerdStore.Enterprise.Pedidos.Domain.Pedidos;
 using NerdStore.Enterprise.Pedidos.Domain.Vouchers;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,8 @@ namespace NerdStore.Enterprise.Pedidos.Infra.Data
         }
 
 
-        //public DbSet<Pedido> Pedidos { get; set; }
-        //public DbSet<PedidoItem> PedidoItems { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<PedidoItem> PedidoItems { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
