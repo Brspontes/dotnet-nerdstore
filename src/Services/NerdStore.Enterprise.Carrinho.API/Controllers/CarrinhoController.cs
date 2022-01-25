@@ -127,6 +127,20 @@ namespace NerdStore.Enterprise.Carrinho.API.Controllers
             return CustomResponse();
         }
 
+        [HttpPost]
+        [Route("carrinho/aplicar-voucher")]
+        public async Task<IActionResult> AplicarVoucher(Voucher voucher)
+        {
+            var carrinho = await ObterCarrinhoCliente();
+
+            carrinho.AplicarVoucher(voucher);
+
+            context.CarrinhoCliente.Update(carrinho);
+
+            await PersistirDados();
+            return CustomResponse();
+        }
+
         private async Task<CarrinhoCliente> ObterCarrinhoCliente() =>
             await context.CarrinhoCliente
                 .Include(c => c.Itens)

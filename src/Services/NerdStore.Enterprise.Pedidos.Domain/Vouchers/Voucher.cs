@@ -1,4 +1,5 @@
 ﻿using NerdStore.Enterprise.Core.DomainObjects;
+using NerdStore.Enterprise.Pedidos.Domain.Vouchers.Specs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,13 +19,13 @@ namespace NerdStore.Enterprise.Pedidos.Domain.Vouchers
         public bool Ativo { get; private set; }
         public bool Utilizado { get; private set; }
 
-        //public bool EstaValidoParaUtilizacao()
-        //{
-        //    return new VoucherAtivoSpecification()
-        //        .And(new VoucherDataSpecification())
-        //        .And(new VoucherQuantidadeSpecification())
-        //        .IsSatisfiedBy(this);
-        //}
+        public bool EstaValidoParaUtilizacao()
+        {
+            return new VoucherAtivoSpecification()
+                .And(new VoucherDataSpecification())
+                .And(new VoucherQuantidadeSpecification())
+                .IsSatisfiedBy(this);
+        }
 
         public void MarcarComoUtilizado()
         {
