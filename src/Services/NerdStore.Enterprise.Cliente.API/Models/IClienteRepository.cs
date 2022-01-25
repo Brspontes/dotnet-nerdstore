@@ -1,4 +1,5 @@
 ﻿using NerdStore.Enterprise.Core.DomainObjects;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,5 +11,8 @@ namespace NerdStore.Enterprise.Cliente.API.Models
 
         Task<IEnumerable<Cliente>> ObterTodos();
         Task<Cliente> ObterPorCpf(string cpf);
+
+        void AdicionarEndereco(Endereco endereco);
+        Task<Endereco> ObterEnderecoPorId(Guid id);
     }
 }

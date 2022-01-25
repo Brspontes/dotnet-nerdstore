@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Cliente.API.Application.Commands
 {
-    public class ClienteCommandHandler : CommandHandler, IRequestHandler<RegistrarClienteCommand, ValidationResult>
+    public class ClienteCommandHandler : CommandHandler, 
+        IRequestHandler<RegistrarClienteCommand, ValidationResult>,
+        IRequestHandler<AdicionarEnderecoCommand, ValidationResult>
     {
         private readonly IClienteRepository clienteRepository;
 
@@ -33,6 +35,16 @@ namespace NerdStore.Enterprise.Cliente.API.Application.Commands
 
             clienteRepository.Adicionar(cliente);
             cliente.AdicionarEvento(new ClienteRegistradoEvent(message.Id, message.Nome, message.Email, message.Cpf));
+
+            return await PersistirDados(clienteRepository.UnitOfWork);
+        }
+
+        public async Task<ValidationResult> Handle(AdicionarEnderecoCommand message, CancellationToken cancellationToken)
+        {
+            if (!message.EhValido()) return message.ValidationResult;
+
+            var endereco = new Endereco(message.Logradouro, message.Numero, message.Complemento, message.Bairro, message.Cep, message.Cidade, message.Estado, message.ClienteId);
+            clienteRepository.AdicionarEndereco(endereco);
 
             return await PersistirDados(clienteRepository.UnitOfWork);
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NerdStore.Enterprise.Cliente.API.Models;
 using NerdStore.Enterprise.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,33 +9,43 @@ namespace NerdStore.Enterprise.Cliente.API.Data.Repositories
 {
     public class ClienteRepository : IClienteRepository
     {
-        private readonly ClientesContext context;
+        private readonly ClientesContext _context;
 
         public ClienteRepository(ClientesContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
-        public IUnitOfWork UnitOfWork => context;
+        public IUnitOfWork UnitOfWork => _context;
 
-        public void Adicionar(Models.Cliente cliente)
+        public async Task<IEnumerable<NerdStore.Enterprise.Cliente.API.Models.Cliente>> ObterTodos()
         {
-            context.Clientes.Add(cliente);
+            return await _context.Clientes.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Models.Cliente> ObterPorCpf(string cpf)
+        public Task<NerdStore.Enterprise.Cliente.API.Models.Cliente> ObterPorCpf(string cpf)
         {
-            return await context.Clientes.FirstOrDefaultAsync(c => c.Cpf.Numero == cpf);
+            return _context.Clientes.FirstOrDefaultAsync(c => c.Cpf.Numero == cpf);
         }
 
-        public async Task<IEnumerable<Models.Cliente>> ObterTodos()
+        public void Adicionar(NerdStore.Enterprise.Cliente.API.Models.Cliente cliente)
         {
-            return await context.Clientes.AsNoTracking().ToListAsync();
+            _context.Clientes.Add(cliente);
+        }
+
+        public async Task<Endereco> ObterEnderecoPorId(Guid id)
+        {
+            return await _context.Enderecos.FirstOrDefaultAsync(e => e.ClienteId == id);
+        }
+
+        public void AdicionarEndereco(Endereco endereco)
+        {
+            _context.Enderecos.Add(endereco);
         }
 
         public void Dispose()
         {
-            context.Dispose();
+            _context.Dispose();
         }
     }
 }

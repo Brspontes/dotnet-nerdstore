@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation.Results;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Core.Mediatr;
+using NerdStore.Enterprise.Pedido.API.Application.Commands;
+using NerdStore.Enterprise.Pedido.API.Application.Events;
 using NerdStore.Enterprise.Pedido.API.Application.Queries;
+using NerdStore.Enterprise.Pedidos.Domain.Pedidos;
 using NerdStore.Enterprise.Pedidos.Domain.Vouchers;
 using NerdStore.Enterprise.Pedidos.Infra.Data;
+using NerdStore.Enterprise.Pedidos.Infra.Data.Repository;
 using NerdStore.Enterprise.Pedidos.Infra.Repository;
 using NerdStore.Enterprise.WebAPI.Core.Usuario;
 using System;
@@ -22,18 +28,18 @@ namespace NerdStore.Enterprise.Pedido.API.Configuration
             services.AddScoped<IAspNetUser, AspNetUser>();
 
             // Commands
-            //services.AddScoped<IRequestHandler<AdicionarPedidoCommand, ValidationResult>, PedidoCommandHandler>();
+            services.AddScoped<IRequestHandler<AdicionarPedidoCommand, ValidationResult>, PedidoCommandHandler>();
 
             //// Events
-            //services.AddScoped<INotificationHandler<PedidoRealizadoEvent>, PedidoEventHandler>();
+            services.AddScoped<INotificationHandler<PedidoRealizadoEvent>, PedidoEventHandler>();
 
             //// Application
             services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IVoucherQueries, VoucherQueries>();
-            //services.AddScoped<IPedidoQueries, PedidoQueries>();
+            services.AddScoped<IPedidoQueries, PedidoQueries>();
 
             //// Data
-            //services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<IVoucherRepository, VoucherRepository>();
             services.AddScoped<PedidosContext>();
         }
