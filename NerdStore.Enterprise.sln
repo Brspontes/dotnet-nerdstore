@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32002.261
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4B048C37-4C72-450D-B7F6-757B1C0E6CB1}"
 EndProject
@@ -55,11 +55,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compras", "Compras", "{378D9DE6-C93D-4A05-A40A-414D2242E331}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdStore.Enterprise.Bff.Compras", "src\ApiGateways\NerdStore.Enterprise.Bff.Compras\NerdStore.Enterprise.Bff.Compras.csproj", "{DF25F5FA-7037-4812-AEAE-E6D58C31648F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NerdStore.Enterprise.Bff.Compras", "src\ApiGateways\NerdStore.Enterprise.Bff.Compras\NerdStore.Enterprise.Bff.Compras.csproj", "{DF25F5FA-7037-4812-AEAE-E6D58C31648F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdStore.Enterprise.Pedidos.Domain", "src\Services\NerdStore.Enterprise.Pedidos.Domain\NerdStore.Enterprise.Pedidos.Domain.csproj", "{20B4DECF-E5FF-45C5-87AA-0266AB30521D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NerdStore.Enterprise.Pedidos.Domain", "src\Services\NerdStore.Enterprise.Pedidos.Domain\NerdStore.Enterprise.Pedidos.Domain.csproj", "{20B4DECF-E5FF-45C5-87AA-0266AB30521D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdStore.Enterprise.Pedidos.Infra", "src\Services\NerdStore.Enterprise.Pedidos.Infra\NerdStore.Enterprise.Pedidos.Infra.csproj", "{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NerdStore.Enterprise.Pedidos.Infra", "src\Services\NerdStore.Enterprise.Pedidos.Infra\NerdStore.Enterprise.Pedidos.Infra.csproj", "{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NerdoStore.Enterprise.NerdsPag", "src\Services\NerdoStore.Enterprise.NerdsPag\NerdoStore.Enterprise.NerdsPag.csproj", "{9AA11B50-3BC2-4DFD-94D6-BD11754728BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AA11B50-3BC2-4DFD-94D6-BD11754728BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AA11B50-3BC2-4DFD-94D6-BD11754728BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AA11B50-3BC2-4DFD-94D6-BD11754728BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AA11B50-3BC2-4DFD-94D6-BD11754728BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +158,7 @@ Global
 		{DF25F5FA-7037-4812-AEAE-E6D58C31648F} = {378D9DE6-C93D-4A05-A40A-414D2242E331}
 		{20B4DECF-E5FF-45C5-87AA-0266AB30521D} = {66B88121-28AC-48F8-B9D2-F9C4A0A51507}
 		{BD8858FC-E8F3-4AF1-A0F3-C6530340FAE4} = {66B88121-28AC-48F8-B9D2-F9C4A0A51507}
+		{9AA11B50-3BC2-4DFD-94D6-BD11754728BD} = {2051BBAB-5E09-4134-A59C-F614C86B164A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EFFAC162-20C6-472C-B264-2E2095B4E572}
