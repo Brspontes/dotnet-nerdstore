@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NerdStore.Enterprise.Pagamento.API.Data;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 
 namespace NerdStore.Enterprise.Pagamento.API.Configuration
@@ -11,8 +13,8 @@ namespace NerdStore.Enterprise.Pagamento.API.Configuration
     {
         public static void AddApiConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContext<PagamentosContext>(options =>
-            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<PagamentosContext>(options =>
+               options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
 
