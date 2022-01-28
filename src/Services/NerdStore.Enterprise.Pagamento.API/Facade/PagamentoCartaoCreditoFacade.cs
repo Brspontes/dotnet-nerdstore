@@ -17,7 +17,7 @@ namespace NerdStore.Enterprise.Pagamento.API.Facade
 
         public async Task<Transacao> AutorizarPagamento(Models.Pagamento pagamento)
         {
-            var            = new NerdsPagService(_pagamentoConfig.DefaultApiKey,
+            var nerdsPagSvc = new NerdsPagService(_pagamentoConfig.DefaultApiKey,
                 _pagamentoConfig.DefaultEncryptionKey);
 
             var cardHashGen = new CardHash(nerdsPagSvc)
@@ -78,7 +78,6 @@ namespace NerdStore.Enterprise.Pagamento.API.Facade
                 TID = transaction.Tid
             };
         }
-
 
         public static Transaction ParaTransaction(Transacao transacao, NerdsPagService nerdsPagService)
         {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NerdStore.Enterprise.Catalogo.API.Services;
 using NerdStore.Enterprise.Core.Utils;
 using NerdStore.Enterprise.MessageBus;
-using NerdStore.Enterprise.Pedido.API.Services;
 
-namespace NerdStore.Enterprise.Pedido.API.Configuration
+namespace NerdStore.Enterprise.Catalogo.API.Configuration
 {
     public static class MessageBusConfig
     {
@@ -12,8 +12,7 @@ namespace NerdStore.Enterprise.Pedido.API.Configuration
             IConfiguration configuration)
         {
             services.AddMessageBus(configuration.GetMessageQueueConnection("MessageBus"))
-                 .AddHostedService<PedidoOrquestradorIntegrationHandler>()
-                 .AddHostedService<PedidoIntegrationHandler>();
+                .AddHostedService<CatalogoIntegrationHandler>();
         }
     }
 }
