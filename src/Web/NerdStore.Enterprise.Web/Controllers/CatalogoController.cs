@@ -19,9 +19,12 @@ namespace NerdStore.Enterprise.Web.Controllers
         [HttpGet]
         [Route("")]
         [Route("vitrine")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int ps = 8, [FromQuery] int page = 1, [FromQuery] string q = null)
         {
-            var produtos = await catalogoService.ObterTodos();
+            var produtos = await catalogoService.ObterTodos(ps, page, q);
+            ViewBag.Pesquisa = q;
+            produtos.ReferenceAction = "Index";
+
             return View(produtos);
         }
 
