@@ -21,6 +21,7 @@ namespace NerdStore.Enterprise.Catalogo.API.Controllers
         }
 
         [HttpGet("catalogo/produtos")]
+        [AllowAnonymous]
         public async Task<PagedResult<Produto>> Index([FromQuery] int ps = 8, [FromQuery] int page = 1, [FromQuery] string q = null)
         {
             return await _produtoRepository.ObterTodos(ps, page, q);

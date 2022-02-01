@@ -10,6 +10,8 @@ using NerdStore.Enterprise.Identidade.Api.Models;
 using NerdStore.Enterprise.MessageBus;
 using NerdStore.Enterprise.WebAPI.Core.Controllers;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
+using NerdStore.Enterprise.WebAPI.Core.Usuario;
+using NetDevPack.Security.JwtSigningCredentials.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,17 +24,22 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
     [Route("api/identidade")]
     public class AuthController : MainController
     {
+        private readonly IAspNetUser aspNetUser;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IOptions<AppSettings> appSettings;
         private readonly IMessageBus bus;
+        private readonly IJsonWebKeySetService jwkService;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings, IMessageBus bus)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+            IOptions<AppSettings> appSettings, IMessageBus bus, IAspNetUser aspNetUser, IJsonWebKeySetService jwkService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.appSettings = appSettings;
             this.bus = bus;
+            this.aspNetUser = aspNetUser;
+            this.jwkService = jwkService;
         }
 
         [HttpPost("nova-conta")]
@@ -123,14 +130,14 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
         private string CodificarToken(ClaimsIdentity identityClaims)
         {
             var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(appSettings.Value.Secret);
+            var currentIssuer = $"{aspNetUser.ObterHttpContext().Request.Scheme}://{aspNetUser.ObterHttpContext().Request.Host}";
+            var key = jwkService.GetCurrent();
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = appSettings.Value.Emissor,
-                Audience = appSettings.Value.ValidoEm,
+                Issuer = currentIssuer,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(appSettings.Value.ExpiracaoHoras),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = key
             });
 
             return tokenHandler.WriteToken(token);
@@ -141,7 +148,7 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
             return new UsuarioRespostaLogin
             {
                 AccessToken = encodedToken,
-                ExpiresIn = TimeSpan.FromHours(appSettings.Value.ExpiracaoHoras).TotalSeconds,
+                ExpiresIn = TimeSpan.FromHours(1).TotalSeconds,
                 UsuarioToken = new UsuarioToken
                 {
                     Id = user.Id,
