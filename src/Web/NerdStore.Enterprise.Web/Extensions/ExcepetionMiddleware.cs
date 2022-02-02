@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Http;
 using NerdStore.Enterprise.Web.Services;
 using Polly.CircuitBreaker;
 using Refit;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -40,6 +42,26 @@ namespace NerdStore.Enterprise.Web.Extensions
             catch (BrokenCircuitException)
             {
                 HandleCircuitBreakerExceptionAsync(context);
+            }
+            catch (RpcException ex)
+            {
+                //400 Bad Request	    INTERNAL
+                //401 Unauthorized      UNAUTHENTICATED
+                //403 Forbidden         PERMISSION_DENIED
+                //404 Not Found         UNIMPLEMENTED
+
+                var statusCode = ex.StatusCode switch
+                {
+                    StatusCode.Internal => 400,
+                    StatusCode.Unauthenticated => 401,
+                    StatusCode.PermissionDenied => 403,
+                    StatusCode.Unimplemented => 404,
+                    _ => 500
+                };
+
+                var httpStatusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), statusCode.ToString());
+
+                HandleRequestExceptionAsync(context, httpStatusCode);
             }
         }
 
