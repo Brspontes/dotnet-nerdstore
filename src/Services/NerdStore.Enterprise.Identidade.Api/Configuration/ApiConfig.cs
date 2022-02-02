@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NerdStore.Enterprise.Identidade.Api.Services;
 using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using NerdStore.Enterprise.WebAPI.Core.Usuario;
 using NetDevPack.Security.JwtSigningCredentials.AspNetCore;
@@ -13,6 +14,7 @@ namespace NerdStore.Enterprise.Identidade.Api.Configuration
         public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<AuthenticationService>();
             services.AddScoped<IAspNetUser, AspNetUser>();
             return services;
         }

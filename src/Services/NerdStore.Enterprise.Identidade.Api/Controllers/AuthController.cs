@@ -1,22 +1,11 @@
-﻿using EasyNetQ;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 using NerdStore.Enterprise.Core.Messages.Integration;
-using NerdStore.Enterprise.Identidade.Api.Extensions;
 using NerdStore.Enterprise.Identidade.Api.Models;
+using NerdStore.Enterprise.Identidade.Api.Services;
 using NerdStore.Enterprise.MessageBus;
 using NerdStore.Enterprise.WebAPI.Core.Controllers;
-using NerdStore.Enterprise.WebAPI.Core.Identidade;
-using NerdStore.Enterprise.WebAPI.Core.Usuario;
-using NetDevPack.Security.JwtSigningCredentials.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Identidade.Api.Controllers
@@ -24,22 +13,15 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
     [Route("api/identidade")]
     public class AuthController : MainController
     {
-        private readonly IAspNetUser aspNetUser;
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly IOptions<AppSettings> appSettings;
-        private readonly IMessageBus bus;
-        private readonly IJsonWebKeySetService jwkService;
+        private readonly AuthenticationService _authenticationService;
+        private readonly IMessageBus _bus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-            IOptions<AppSettings> appSettings, IMessageBus bus, IAspNetUser aspNetUser, IJsonWebKeySetService jwkService)
+        public AuthController(
+            AuthenticationService authenticationService,
+            IMessageBus bus)
         {
-            this.signInManager = signInManager;
-            this.userManager = userManager;
-            this.appSettings = appSettings;
-            this.bus = bus;
-            this.aspNetUser = aspNetUser;
-            this.jwkService = jwkService;
+            _authenticationService = authenticationService;
+            _bus = bus;
         }
 
         [HttpPost("nova-conta")]
@@ -54,7 +36,7 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
                 EmailConfirmed = true
             };
 
-            var result = await userManager.CreateAsync(user, usuarioRegistro.Senha);
+            var result = await _authenticationService.UserManager.CreateAsync(user, usuarioRegistro.Senha);
 
             if (result.Succeeded)
             {
@@ -62,120 +44,80 @@ namespace NerdStore.Enterprise.Identidade.Api.Controllers
 
                 if (!clienteResult.ValidationResult.IsValid)
                 {
-                    await userManager.DeleteAsync(user);
+                    await _authenticationService.UserManager.DeleteAsync(user);
                     return CustomResponse(clienteResult.ValidationResult);
                 }
 
-                return CustomResponse(await GerarJwt(usuarioRegistro.Email));
+                return CustomResponse(await _authenticationService.GerarJwt(usuarioRegistro.Email));
             }
 
-            foreach (var erro in result.Errors)
+            foreach (var error in result.Errors)
             {
-                AdicionarErroProcessamento(erro.Description);
+                AdicionarErroProcessamento(error.Description);
             }
 
             return CustomResponse();
         }
 
-        [HttpPost("auntenticar")]
+        [HttpPost("autenticar")]
         public async Task<ActionResult> Login(UsuarioLogin usuarioLogin)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var result = await signInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha, false, true);
+            var result = await _authenticationService.SignInManager.PasswordSignInAsync(usuarioLogin.Email, usuarioLogin.Senha,
+                false, true);
 
-            if (result.Succeeded) return CustomResponse(await GerarJwt(usuarioLogin.Email));
-
-            if(result.IsLockedOut)
+            if (result.Succeeded)
             {
-                AdicionarErroProcessamento("Usuário bloqueado temporariamente por tentativas inválidas");
+                return CustomResponse(await _authenticationService.GerarJwt(usuarioLogin.Email));
+            }
+
+            if (result.IsLockedOut)
+            {
+                AdicionarErroProcessamento("Usuário temporariamente bloqueado por tentativas inválidas");
                 return CustomResponse();
             }
 
-            AdicionarErroProcessamento("Usuário ou senha incorretos");
+            AdicionarErroProcessamento("Usuário ou Senha incorretos");
             return CustomResponse();
         }
 
-        private async Task<UsuarioRespostaLogin> GerarJwt(string email)
-        {
-            var user = await userManager.FindByEmailAsync(email);
-            var claims = await userManager.GetClaimsAsync(user);
-
-            var identityClaims = await ObterClaimsUsuario(claims, user);
-            var encodedToken = CodificarToken(identityClaims);
-
-            return ObterRespostaToken(encodedToken, user, claims);
-        }
-
-        private async Task<ClaimsIdentity> ObterClaimsUsuario(ICollection<Claim> claims, IdentityUser user)
-        {
-            var userRoles = await userManager.GetRolesAsync(user);
-
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-            foreach (var userRole in userRoles)
-            {
-                claims.Add(new Claim("role", userRole));
-            }
-
-            var identityClaims = new ClaimsIdentity();
-            identityClaims.AddClaims(claims);
-
-            return identityClaims;
-        }
-
-        private string CodificarToken(ClaimsIdentity identityClaims)
-        {
-            var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
-            var currentIssuer = $"{aspNetUser.ObterHttpContext().Request.Scheme}://{aspNetUser.ObterHttpContext().Request.Host}";
-            var key = jwkService.GetCurrent();
-            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
-            {
-                Issuer = currentIssuer,
-                Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = key
-            });
-
-            return tokenHandler.WriteToken(token);
-        }
-
-        private UsuarioRespostaLogin ObterRespostaToken(string encodedToken, IdentityUser user, IEnumerable<Claim> claims)
-        {
-            return new UsuarioRespostaLogin
-            {
-                AccessToken = encodedToken,
-                ExpiresIn = TimeSpan.FromHours(1).TotalSeconds,
-                UsuarioToken = new UsuarioToken
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Claims = claims.Select(c => new UsuarioClaim { Type = c.Type, Value = c.Value })
-                }
-            };
-        }
-
-        private static long ToUnixEpochDate(DateTime date)
-            => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
-
         private async Task<ResponseMessage> RegistrarCliente(UsuarioRegistro usuarioRegistro)
         {
-            var usuario = await userManager.FindByEmailAsync(usuarioRegistro.Email);
+            var usuario = await _authenticationService.UserManager.FindByEmailAsync(usuarioRegistro.Email);
+
             var usuarioRegistrado = new UsuarioRegistradoIntegrationEvent(
                 Guid.Parse(usuario.Id), usuarioRegistro.Nome, usuarioRegistro.Email, usuarioRegistro.Cpf);
 
             try
             {
-                return await bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
+                return await _bus.RequestAsync<UsuarioRegistradoIntegrationEvent, ResponseMessage>(usuarioRegistrado);
             }
-            catch (Exception)
+            catch
             {
-                await userManager.DeleteAsync(usuario);
+                await _authenticationService.UserManager.DeleteAsync(usuario);
                 throw;
             }
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult> RefreshToken([FromBody] string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                AdicionarErroProcessamento("Refresh Token inválido");
+                return CustomResponse();
+            }
+
+            var token = await _authenticationService.ObterRefreshToken(Guid.Parse(refreshToken));
+
+            if (token is null)
+            {
+                AdicionarErroProcessamento("Refresh Token expirado");
+                return CustomResponse();
+            }
+
+            return CustomResponse(await _authenticationService.GerarJwt(token.Username));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NerdStore.Enterprise.Identidade.Api.Models;
 using NetDevPack.Security.JwtSigningCredentials;
 using NetDevPack.Security.JwtSigningCredentials.Store.EntityFrameworkCore;
 using System;
@@ -18,5 +19,6 @@ namespace NerdStore.Enterprise.Identidade.Api.Data
         }
 
         public DbSet<SecurityKeyWithPrivate> SecurityKeys { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

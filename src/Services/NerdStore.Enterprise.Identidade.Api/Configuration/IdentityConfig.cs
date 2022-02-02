@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NerdStore.Enterprise.Identidade.Api.Data;
 using NerdStore.Enterprise.Identidade.Api.Extensions;
-using NerdStore.Enterprise.WebAPI.Core.Identidade;
 using NetDevPack.Security.JwtSigningCredentials;
 
 namespace NerdStore.Enterprise.Identidade.Api.Configuration
@@ -15,6 +13,9 @@ namespace NerdStore.Enterprise.Identidade.Api.Configuration
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services,
             IConfiguration configuration)
         {
+            var appSettingsSection = configuration.GetSection("AppTokenSettings");
+            services.Configure<AppTokenSettings>(appSettingsSection);   
+
             services.AddJwksManager(options => options.Algorithm = Algorithm.ES256)
                 .PersistKeysToDatabaseStore<ApplicationDbContext>();
 
