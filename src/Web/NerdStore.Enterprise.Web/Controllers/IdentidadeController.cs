@@ -1,29 +1,24 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NerdStore.Enterprise.Web.Models;
 using NerdStore.Enterprise.Web.Services;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NerdStore.Enterprise.Web.Controllers
 {
     public class IdentidadeController : MainController
     {
-        private readonly IAutenticacaoService autenticacaoService;
+        private readonly IAutenticacaoService _autenticacaoService;
 
-        public IdentidadeController(IAutenticacaoService autenticacaoService)
+        public IdentidadeController(
+            IAutenticacaoService autenticacaoService)
         {
-            this.autenticacaoService = autenticacaoService;
+            _autenticacaoService = autenticacaoService;
         }
 
         [HttpGet]
         [Route("nova-conta")]
-        public IActionResult Registro(string returnUrl = null)
+        public IActionResult Registro()
         {
-            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
@@ -33,20 +28,20 @@ namespace NerdStore.Enterprise.Web.Controllers
         {
             if (!ModelState.IsValid) return View(usuarioRegistro);
 
-            // API Login
-            var resposta = await autenticacaoService.Registro(usuarioRegistro);
+            var resposta = await _autenticacaoService.Registro(usuarioRegistro);
 
             if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioRegistro);
 
-            // Realizar Login
-            await RealizarLogin(resposta);
-            return RedirectToAction("Index", "Home");
+            await _autenticacaoService.RealizarLogin(resposta);
+
+            return RedirectToAction("Index", "Catalogo");
         }
 
         [HttpGet]
         [Route("login")]
         public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
@@ -57,13 +52,13 @@ namespace NerdStore.Enterprise.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(usuarioLogin);
 
-            var resposta = await autenticacaoService.Login(usuarioLogin);
+            var resposta = await _autenticacaoService.Login(usuarioLogin);
 
             if (ResponsePossuiErros(resposta.ResponseResult)) return View(usuarioLogin);
 
-            await RealizarLogin(resposta);
+            await _autenticacaoService.RealizarLogin(resposta);
 
-            if(string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+            if (string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Catalogo");
 
             return LocalRedirect(returnUrl);
         }
@@ -72,31 +67,8 @@ namespace NerdStore.Enterprise.Web.Controllers
         [Route("sair")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            await _autenticacaoService.Logout();
+            return RedirectToAction("Index", "Catalogo");
         }
-
-        private async Task RealizarLogin(UsuarioRespostaLogin respostaLogin)
-        {
-            var token = ObterTokenFormatado(respostaLogin.AccessToken);
-
-            var claims = new List<Claim>();
-            claims.Add(new Claim("JWT", respostaLogin.AccessToken));
-            claims.AddRange(token.Claims);
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = System.DateTimeOffset.UtcNow.AddMinutes(60),
-                IsPersistent = true
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity), authProperties);
-        }
-
-        private static JwtSecurityToken ObterTokenFormatado(string jwtToken) =>
-            new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
     }
 }
