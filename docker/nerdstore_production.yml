@@ -11,6 +11,19 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  sql-server:
+    image: brspontes/nerdstore-sql-server:latest
+    container_name: nerdstore-sql-server
+    build:
+      context: ../sql
+      dockerfile: ./Dockerfile
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "MeuDB@123"
+      ACCEPT_EULA: "Y"
+
+
   web-mvc:
     image: brspontes/nerdstore-web-mvc:latest
     container_name: nerdstore-web-mvc
