@@ -7,10 +7,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["src/Services/NerdStore.Enterprise.Identidade.Api/NerdStore.Enterprise.Identidade.Api.csproj", "src/Services/NerdStore.Enterprise.Identidade.Api/"]
-RUN dotnet restore "src/Services/NerdStore.Enterprise.Identidade.Api/NerdStore.Enterprise.Identidade.Api.csproj"
+COPY ["./Services/NerdStore.Enterprise.Identidade.Api/NerdStore.Enterprise.Identidade.Api.csproj", "Services/NerdStore.Enterprise.Identidade.Api/"]
+COPY ["./BuildingBlocks/NerdStore.Enterprise.Core/NerdStore.Enterprise.Core.csproj", "BuildingBlocks/NerdStore.Enterprise.Core/"]
+COPY ["./BuildingBlocks/NerdStore.Enterprise.WebAPI.Core/NerdStore.Enterprise.WebAPI.Core.csproj", "BuildingBlocks/NerdStore.Enterprise.WebAPI.Core/"]
+COPY ["./BuildingBlocks/NerdStore.Enterprise.MessageBus/NerdStore.Enterprise.MessageBus.csproj", "BuildingBlocks/NerdStore.Enterprise.MessageBus/"]
+RUN dotnet restore "Services/NerdStore.Enterprise.Identidade.Api/NerdStore.Enterprise.Identidade.Api.csproj"
 COPY . .
-WORKDIR "/src/src/Services/NerdStore.Enterprise.Identidade.Api"
+WORKDIR "Services/NerdStore.Enterprise.Identidade.Api"
 RUN dotnet build "NerdStore.Enterprise.Identidade.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
